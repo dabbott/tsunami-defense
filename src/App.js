@@ -52,7 +52,7 @@ class PurchaseArea extends Component {
   }
 
   renderItem = (item, i) => {
-    const {name, type} = item
+    const {name, type, cost} = item
     const {selectedItem, onSelectItem} = this.props
 
     return (
@@ -67,6 +67,8 @@ class PurchaseArea extends Component {
         {name}
         <div style={{paddingTop: 6}} />
         <img src={item.image} />
+        <div style={{paddingTop: 6}} />
+        ${cost}
       </div>
     )
   }
