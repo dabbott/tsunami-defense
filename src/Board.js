@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
 
+import Healthbar from './Healthbar'
+
 export default class Board extends Component {
 
   static defaultProps = {
@@ -34,38 +36,48 @@ export default class Board extends Component {
     const g = 40
     const b = (Math.random() * 50 + 100) | 0
 
-    return `rgb(${r},${g},${b})`
+    return `rgba(${r},${g},${b},0.3)`
   }
 
   renderWater = (water, i) => {
     const {squareSize} = this.props
-    const {row, column} = water.coord
+    const {coord: {row, column}, stats: {hp, total}} = water
 
     const style = {
+      color: 'white',
       position: 'absolute',
       left: column * squareSize,
       top: row * squareSize,
       width: squareSize,
       height: squareSize,
-      backgroundColor: 'white',
+      background: 'url(water.png)',
     }
 
     return (
-      <div key={i} style={style} />
+      <div key={i} style={style}>
+        <Healthbar
+          hp={hp}
+          total={total}
+        />
+      </div>
     )
   }
 
   renderSquare = (row, column) => {
     const {squareSize, onClickSquare, buildings} = this.props
 
+    const existingBuilding = buildings
+      .find(x => _.isEqual({row, column}, x.coord))
+
     const style = {
       width: squareSize,
       height: squareSize,
-      backgroundColor: this.getBoxColor(),
+      color: 'white',
+      background: existingBuilding && existingBuilding.stats.image
+        ? `url(${existingBuilding.stats.image}), #a69589`
+        : 'url(ground.png)',
+      position: 'relative',
     }
-
-    const existingBuilding = buildings
-      .find(x => _.isEqual({row, column}, x.coord))
 
     return (
       <div
@@ -73,7 +85,12 @@ export default class Board extends Component {
         style={style}
         onClick={onClickSquare.bind(this, {row, column})}
       >
-        {existingBuilding && existingBuilding.stats.name}
+        {existingBuilding &&
+          <Healthbar
+            hp={existingBuilding.stats.hp}
+            total={existingBuilding.stats.total}
+          />
+        }
       </div>
     )
   }

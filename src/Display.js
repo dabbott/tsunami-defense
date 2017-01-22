@@ -7,7 +7,7 @@ export default class Display extends Component {
     text: {
       color: 'white',
       position: 'absolute',
-      top: 40,
+      bottom: 40,
       left: 40,
     }
   }
